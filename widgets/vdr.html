@@ -1,0 +1,38 @@
+<!--
+    ioBroker.vis vdr Widget-Set
+
+    version: "0.0.1"
+
+    Copyright 2018 maker<stefan@fam-macher.de>
+-->
+<!-- here you can include so many css as you want -->
+<link rel="stylesheet" href="widgets/vdr/css/style.css" />
+<!-- here you can include so many js-files as you want -->
+<script type="text/javascript" src="widgets/vdr/js/vdr.js"></script>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+<script id="tplVdrChannelSelect"
+        type="text/ejs"
+        class="vis-tpl"
+        data-vis-prev='<div id="prev_tplMysetShowInstance" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev " style="width: 280px; height: 159px;" > <div class="myset-class vis-widget-prev-body " style="padding:2px"> OID: hm-rpc.0.EEQ0006629.1.STATE<br> OID value: true<br> Color: <span style="color: rgb(128, 0, 0);">#800000</span><br> htmlText: <textarea readonly="" style="width:100%">asda</textarea></div>'
+        data-vis-attrs="oid_getChList/id;oid_setCh/id;chListHeadBgColor/color;chListHeadTextColor/color;chListEvenLineBgColor/color;chListEvenLineTextColor/color;chListOddLineBgColor/color;chListOddLineTextColor/color;numberChannels[10]/number"
+        data-vis-set="vdr"
+        data-vis-type="ctrl,val,vdr"
+        data-vis-name="Selectable channel list"
+        data-vis-beta="true"
+        data-vis-update-style="true">
+    <div class="vis-widget <%== this.data.attr('class') %>" style="width:230px; height:210px;" id="<%= this.data.attr('wid') %>" >
+        <div class="vdr-ch-select">
+            <div class="vdr-ch-table vdr-ch-select-col vdr-ch-select-col-left"></div>
+            <div class="vdr-ch-scroll vdr-ch-select-col vdr-ch-select-col-right">
+                <table>
+                    <tr><td id="vdr-ch-select-scroll-top"><button class="vdr-ch-select-scroll-button" data-feather="chevrons-up"></button></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td id="vdr-ch-select-scroll-up"><button class="vdr-ch-select-scroll-button" data-feather="chevron-up"></button></td></tr>
+                    <tr><td id="vdr-ch-select-scroll-down"><button class="vdr-ch-select-scroll-button" data-feather="chevron-down"></button></td></tr>
+                </table>
+            </div>
+            <% vis.binds.vdr.createChSelectWidget(this.data.wid, this.view, this.data, this.style); %>
+        </div>
+    </div>
+</script>

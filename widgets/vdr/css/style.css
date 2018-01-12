@@ -1,0 +1,31 @@
+.vdr-ch-select {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+.vdr-ch-select-col {
+    display: table-cell;
+    padding: 10px;
+}
+.vdr-ch-select-col-left{
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.vdr-ch-select-col-right{
+    vertical-align: middle;
+    width: 80px;
+}
+
+.vdr-channel-list-nr-col {
+    align: right;
+}
+.vdr-ch-select-scroll-button {
+    border: none;
+    padding: 0px 0px;
+    margin: 2px 2px;
+    cursor: pointer;
+}
+.vdr-ch-select-scroll-button:hover {
+    background-color: yellow;
+}
