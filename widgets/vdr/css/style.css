@@ -29,3 +29,34 @@
 .vdr-ch-select-scroll-button:hover {
     background-color: yellow;
 }
+.vdr-rec-select {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+.vdr-rec-select-col {
+    display: table-cell;
+    padding: 10px;
+}
+.vdr-rec-select-col-left{
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.vdr-rec-select-col-right{
+    vertical-align: middle;
+    width: 80px;
+}
+
+.vdr-rec-list-nr-col {
+    align: right;
+}
+.vdr-rec-select-scroll-button {
+    border: none;
+    padding: 0px 0px;
+    margin: 2px 2px;
+    cursor: pointer;
+}
+.vdr-rec-select-scroll-button:hover {
+    background-color: yellow;
+}

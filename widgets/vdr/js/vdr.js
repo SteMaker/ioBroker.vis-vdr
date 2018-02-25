@@ -32,6 +32,7 @@ $.extend(true, systemDictionary, {
 vis.binds.vdr = {
     version: "0.0.1",
     firstCh: 0,
+    firstRec: 0,
     showVersion: function () {
         if (vis.binds.vdr.version) {
             console.log('Version vdr: ' + vis.binds.vdr.version);
@@ -126,7 +127,95 @@ vis.binds.vdr = {
             });
         }
         feather.replace();
-    }
+    },
+    updateRecSelectStyles: function (data) {
+        $(".vdr-rec-select-head").css("background-color", data.recSelectHeadBgColor);
+        $(".vdr-rec-select-head").css("color", data.recSelectHeadTextColor);
+        $(".vdr-rec-select-row-even").css("background-color", data.recSelectEvenLineBgColor);
+        $(".vdr-rec-select-row-even").css("color", data.recSelectEvenLineTextColor);
+        $(".vdr-rec-select-row-odd").css("background-color", data.recSelectOddLineBgColor);
+        $(".vdr-rec-select-row-odd").css("color", data.recSelectOddLineTextColor);
+        $(".vdr-rec-select-scroll-button").css("background-color", data.recSelectHeadBgColor);
+        $(".vdr-rec-select-scroll-button").css("stroke", data.recSelectHeadTextColor);
+    },
+	updateRecSelect: function (widgetID, view, data, style) {
+        var tblHtml = "";
+        if(data.oid_getRecList) {
+            var recList = JSON.parse(vis.states[data.oid_getRecList + '.val']);
+            var len = recList.length;
+            var numRec = Number(data.numberRecordings);
+            if(len < numRec) {
+                numRec = len;
+            }
+            var first = vis.binds.vdr.firstRec;
+            if(first < 0) {
+                first = 0;
+                vis.binds.vdr.firstRec = 0;
+            }
+            var last = first + numRec;
+            if(last > len) {
+                last = len;
+                first = last - numRec;
+                vis.binds.vdr.firstRec = first;
+            }
+            if (len) {
+                tblHtml += "<table width=\"100%\" class=\"vdr-rec-select\"><tr class=\"vdr-rec-select-head\"><th>REC#</th><th>Title</th></tr>";
+                for(; first < last; first++) {
+                        tblHtml += "<tr class=\"vdr-rec-select-button vdr-rec-select-row" + ((first%2==0)?"-odd\"":"-even\"");
+                        tblHtml += " data-recid="+recList[first]["nr"] + " data-rectitle="+recList[first]["name"]+">";
+                        tblHtml += "<td class=\"vdr-rec-list-nr-col\">"+recList[first]["nr"]+"</td><td>"+recList[first]["name"]+"</td></tr>";
+                }
+                tblHtml += "</table>";
+            }
+        }
+        $('.vdr-rec-table').html(tblHtml);
+        vis.binds.vdr.updateRecSelectStyles(data);
+
+        // function called when a recording (line) in the recording list is clicked
+        $(".vdr-rec-select-button").click(function() {
+            var recId = $(this).data("recid");
+            console.log("Recording with title " + $(this).data("rectitle") + " was clicked");
+        });
+    },
+	createRecSelectWidget: function (widgetID, view, data, style) {
+        var $div = $('#' + widgetID);
+        // if nothing found => wait
+        if (!$div.length) {
+            return setTimeout(function () {
+                vis.binds.vdr.createRecSelectWidget(widgetID, view, data, style);
+            }, 100);
+        }
+
+        // Build the channel list table
+        vis.binds.vdr.updateRecSelect(widgetID, view, data, style);
+
+        // function called when scroll up button was pressed
+        $("#vdr-rec-select-scroll-up").click(function() {
+            console.log("Scrolling up");
+            vis.binds.vdr.firstRec -= Number(data.numberRecordings);
+            vis.binds.vdr.updateRecSelect(widgetID, view, data, style);
+        });
+        // function called when scroll down button was pressed
+        $("#vdr-rec-select-scroll-down").click(function() {
+            console.log("Scrolling down");
+            vis.binds.vdr.firstRec += Number(data.numberRecordings);
+            vis.binds.vdr.updateRecSelect(widgetID, view, data, style);
+        });
+        // function called when scroll top button was pressed
+        $("#vdr-rec-select-scroll-top").click(function() {
+            console.log("Scrolling to top");
+            vis.binds.vdr.firstRec = 0;
+            vis.binds.vdr.updateRecSelect(widgetID, view, data, style);
+        });
+
+        // subscribe on updates of value
+        if (data.oid_getRecList) {
+            vis.states.bind(data.oid_getRecList + '.val', function (e, newVal, oldVal) {
+                updateRecSelect(widgetID, view, data, style);
+            });
+        }
+        feather.replace();
+    },
 };
 
 vis.binds.vdr.showVersion();
