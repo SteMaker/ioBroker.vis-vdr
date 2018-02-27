@@ -30,9 +30,10 @@
     background-color: yellow;
 }
 .vdr-rec-select {
-    display: table;
-    table-layout: fixed;
-    width: 100%;
+    border: 1px solid green;
+    border-collapse: collapse;
+    width:100%;
+    table-layout:fixed;
 }
 .vdr-rec-select-col {
     display: table-cell;
@@ -47,9 +48,21 @@
     vertical-align: middle;
     width: 80px;
 }
-
-.vdr-rec-list-nr-col {
-    align: right;
+.vdr-rec-list-duration-col {
+    text-align: center;
+    white-space:nowrap;
+    width: 80px;
+    border: 1px solid green;
+}
+.vdr-rec-list-date-col {
+    text-align: center;
+    white-space:nowrap;
+    width: 80px;
+    border: 1px solid green;
+}
+.vdr-rec-list-title-col {
+    white-space: nowrap;
+    overflow: hidden;
 }
 .vdr-rec-select-scroll-button {
     border: none;

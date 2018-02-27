@@ -19,7 +19,10 @@ if (vis.editMode) {
         },
         "htmlText":         {"en": "htmlText",      "de": "htmlText",   "ru": "htmlText"},
         "group_extraMyset": {"en": "extraMyset",    "de": "extraMyset", "ru": "extraMyset"},
-        "extraAttr":        {"en": "extraAttr",     "de": "extraAttr",  "ru": "extraAttr"}
+        "extraAttr":        {"en": "extraAttr",     "de": "extraAttr",  "ru": "extraAttr"},
+        "Title":            {"en": "Title",         "de": "Titel"},
+        "Duration":         {"en": "Duration",      "de": "Dauer"},
+        "Date":             {"en": "Date",          "de": "Datum"}
     });
 }
 
@@ -137,6 +140,8 @@ vis.binds.vdr = {
         $(".vdr-rec-select-row-odd").css("color", data.recSelectOddLineTextColor);
         $(".vdr-rec-select-scroll-button").css("background-color", data.recSelectHeadBgColor);
         $(".vdr-rec-select-scroll-button").css("stroke", data.recSelectHeadTextColor);
+        $(".vdr-rec-list-date-col").css("width", data.pxWidthDate);
+        $(".vdr-rec-list-duration-col").css("width", data.pxWidthDuration);
     },
 	updateRecSelect: function (widgetID, view, data, style) {
         var tblHtml = "";
@@ -159,11 +164,17 @@ vis.binds.vdr = {
                 vis.binds.vdr.firstRec = first;
             }
             if (len) {
-                tblHtml += "<table width=\"100%\" class=\"vdr-rec-select\"><tr class=\"vdr-rec-select-head\"><th>REC#</th><th>Title</th></tr>";
+                tblHtml += "<table class=\"vdr-rec-select\"><tr class=\"vdr-rec-select-head\"><th class=\"vdr-rec-list-title-col\" class=\"translate\">Title</th><th class=\"vdr-rec-list-date-col\" class=\"translate\">Date</th><th class=\"vdr-rec-list-duration-col\" class=\"translate\">Duration</th></tr>";
                 for(; first < last; first++) {
+                        var durH = Math.floor(recList[first].duration / 3600);
+                        var durM = ("00"+Math.round((parseInt(recList[first].duration)-durH*3600)/60)).slice(-2);
+                        var date = new Date(recList[first].start_time*1000);
+                        var dateD = ("00"+date.getDate()).slice(-2);
+                        var dateM = ("00"+(date.getMonth()+1)).slice(-2);
+                        var dateY = ("00"+date.getFullYear()).slice(-2);
                         tblHtml += "<tr class=\"vdr-rec-select-button vdr-rec-select-row" + ((first%2==0)?"-odd\"":"-even\"");
-                        tblHtml += " data-recid="+recList[first]["nr"] + " data-rectitle="+recList[first]["name"]+">";
-                        tblHtml += "<td class=\"vdr-rec-list-nr-col\">"+recList[first]["nr"]+"</td><td>"+recList[first]["name"]+"</td></tr>";
+                        tblHtml += " data-recfilename=" + recList[first]["filename"] + ">";
+                        tblHtml += "<td class=\"vdr-rec-list-title-col\">"+recList[first]["name"]+"</td><td class=\"vdr-rec-list-date-col\">" + dateD+"."+dateM+"."+dateY + "</td><td class=\"vdr-rec-list-duration-col\">" + durH+":"+durM + "</td></tr>";
                 }
                 tblHtml += "</table>";
             }
@@ -174,7 +185,7 @@ vis.binds.vdr = {
         // function called when a recording (line) in the recording list is clicked
         $(".vdr-rec-select-button").click(function() {
             var recId = $(this).data("recid");
-            console.log("Recording with title " + $(this).data("rectitle") + " was clicked");
+            console.log("Recording with filename " + $(this).data("recfilename") + " was clicked");
         });
     },
 	createRecSelectWidget: function (widgetID, view, data, style) {
